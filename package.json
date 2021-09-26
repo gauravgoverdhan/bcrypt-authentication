@@ -1,0 +1,18 @@
+{
+  "name": "auth-r1",
+  "version": "1.0.0",
+  "description": "Round 1 - Authentication App",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server/index.js",
+    "build": "cd client && npm install && npm run build"
+  },
+  "author": "Gaurav Goverdhan",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "engines": {
+    "node": "14.17.4"
+  }
+}
