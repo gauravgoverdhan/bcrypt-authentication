@@ -1,0 +1,26 @@
+body {
+    background-color: #E8ECEF;
+    padding-top: 20px;
+}
+
+.home-page {
+    text-align: center;
+    padding-top: 200px
+}
+
+.btn {
+    margin: 5px;
+}
+
+.bucket {
+    text-align: center;
+}
+
+.bucket label {
+    margin: 10px 0 4px 0;
+}
+
+.bucket input, .bucket textarea {
+    width: 30%;
+    display: inline;
+}

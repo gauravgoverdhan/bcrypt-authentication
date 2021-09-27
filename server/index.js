@@ -1,23 +1,130 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const bcrypt = require("bcrypt");
+const saltRounds = parseInt(process.env.SALT_ROUNDS);
 
 const app = express();
 
+app.use(express.urlencoded({
+    extended: true
+}));
+app.use(express.json());
 app.use(express.static(path.resolve(__dirname, "../client/build")));
+app.use(cors());
 
-
-app.get("/api", (req, res) => {
-    res.json({ message: "Hello from server!" });
+mongoose.connect("mongodb+srv://" + process.env.MONGO_USER + ":" + process.env.MONGO_PASS + "@cluster0.nqtyp.mongodb.net/bucketDB?retryWrites=true&w=majority", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 });
 
-app.get("/login", (req, res) => {
+const bucketSchema = new mongoose.Schema ({
+    bucketId: String, 
+    inputArea: String
+});
+
+const userSchema = new mongoose.Schema ({
+    email: String,
+    password: String,
+    buckets: bucketSchema
+});
+  
+const User = mongoose.model("User", userSchema);
+const Bucket = mongoose.model("Bucket", bucketSchema);
+
+app.post("/register", (req, res) => {
+    User.findOne({email: req.body.username}, (err, foundUser) => {
+        if (foundUser) {
+            console.log("User already exists");
+            res.json({
+                isRegistered: false
+            });
+        } else {
+            bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+                const newUser = new User ({
+                    email: req.body.username,
+                    password: hash
+                });
+                newUser.save((err) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("User created");
+                        res.json({
+                            isRegistered: true
+                        });
+                    }
+                })
+            });
+        }
+    });
+});
+
+app.post("/login", (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    User.findOne({email: username}, (err, foundUser) => {
+        if (err) {
+            console.log(err);
+        } else {
+        if (foundUser) {
+                bcrypt.compare(password, foundUser.password, (err, result) => {
+                    if (result === true) {
+                        res.json({
+                            isLogged: true
+                        });
+                    } else {
+                        res.json({
+                            isLogged: false
+                        });
+                    }
+                });
+            } else {
+                res.json({
+                    isLogged: false
+                });
+            }
+        }
+    });
+});
+
+app.post("/bucket", (req, res) => {
+    const username = req.body.userData.username;
+    const bId = req.body.userInput.bucketName;
+    const bText = req.body.userInput.inputArea;
     
-});
+    const newBucket = new Bucket({
+        bucketId: bId,
+        inputArea: bText
+    });
 
-app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../client/build", "index.html"))
+    Bucket.findOne({bucketId: bId}, (err, foundBucket) => {
+        if (!err) {
+            if (foundBucket) {
+                console.log("Bucket already exists");
+                res.json({
+                    insertBucket: false
+                });
+            } else {
+                newBucket.save((err) => {
+                    if (!err) {
+                        console.log("Bucket inserted successfully!");
+                        res.json({
+                            insertBucket: true
+                        });
+                    } else {
+                        console.log(err);
+                    }
+                });
+            }
+        } else {
+            console.log(err);
+        }
+    });
 });
-
 
 let port = process.env.PORT;
 if (port == null || port == "") 
