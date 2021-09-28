@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.static(path.resolve(__dirname, "../client/build")));
 app.use(cors());
 
-mongoose.connect("mongodb+srv://" + process.env.MONGO_USER + ":" + process.env.MONGO_PASS + "@cluster0.nqtyp.mongodb.net/bucketDB?retryWrites=true&w=majority", {
+mongoose.connect(process.env.MONGO_CONNECT, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -92,9 +92,8 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/bucket", (req, res) => {
-    const username = req.body.userData.username;
-    const bId = req.body.userInput.bucketName;
-    const bText = req.body.userInput.inputArea;
+    const bId = req.body.bucketName;
+    const bText = req.body.inputArea;
     
     const newBucket = new Bucket({
         bucketId: bId,
@@ -111,6 +110,7 @@ app.post("/bucket", (req, res) => {
             } else {
                 newBucket.save((err) => {
                     if (!err) {
+                        console.log(foundBucket);
                         console.log("Bucket inserted successfully!");
                         res.json({
                             insertBucket: true

@@ -5,6 +5,8 @@ import { userData1 } from "./Login";
 
 function Bucket() {
 
+    const uData = userData !== undefined ? userData : userData1;
+
     const [ userInput, setUserInput ] = useState({
         bucketName: "",
         inputArea: ""
@@ -37,7 +39,7 @@ function Bucket() {
         } else {
             if (userInput.bucketName === "")
                 alert("Bucket name is empty!");
-            axios.post("http://localhost:3001/bucket", {userData, userInput})
+            axios.post("http://localhost:3001/bucket", userInput)
             .then(res => {
                 if (res.data.insertBucket)
                     alert("Data written to DB!");
@@ -52,7 +54,7 @@ function Bucket() {
 
     return (
         <div className="bucket">
-            <h1 className="username-heading">Username: {userData.username ? userData.username : userData1.username}</h1>
+            <h1 className="username-heading">Username: {uData.username}</h1>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="bucketName">Bucket Name</label><br />

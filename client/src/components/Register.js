@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
-import history from "../history";
+import { useHistory } from "react-router-dom";
 
 let userData;
 
 function Register() {
+
+    const history = useHistory();
 
     const [ formData, setFormData ] = useState({
         username: "",
@@ -15,7 +17,6 @@ function Register() {
     const [ fetch, setFetch ] = useState(false);
 
     function handleChange(e) {
-        e.preventDefault();
         const { name, value } = e.target;
         setFormData((prevValue) => {
             return {
@@ -52,8 +53,6 @@ function Register() {
             });
         } 
     }, [fetch]);
-
-    // const initialRender2 = useRef(true);
 
     useEffect(() => {
         userData = formData;

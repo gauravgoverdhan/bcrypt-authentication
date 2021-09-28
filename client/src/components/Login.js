@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef} from "react";
 import axios from "axios";
-import history from "../history";
+import { useHistory } from "react-router-dom";
 
 let userData1;
 
 function Login() {
+
+    const history = useHistory();
 
     const [ formData, setFormData ] = useState({
         username: "",
@@ -52,8 +54,6 @@ function Login() {
             });
         } 
     }, [fetch]);
-
-    // const initialRender2 = useRef(true);
 
     useEffect(() => {
         userData1 = formData;
