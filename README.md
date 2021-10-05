@@ -7,6 +7,7 @@ Bcrypt authentication app with ReactJS, NodeJS and MongoDB
 * CSS
 * JavaScript
 * [Bootstrap](https://getbootstrap.com/)
+* [React.js](https://reactjs.org/)
 * [Node.js](https://nodejs.org/en/)
 * [Express.js](https://expressjs.com/)
 * [MongoDB](https://www.mongodb.com/)
