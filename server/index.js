@@ -4,7 +4,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
-const saltRounds = parseInt(process.env.SALT_ROUNDS);
+const saltRounds = 10;
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.static(path.resolve(__dirname, "../client/build")));
 app.use(cors());
 
-mongoose.connect(process.env.MONGO_CONNECT, {
+mongoose.connect("mongodb://localhost:27017/bucketDB", {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
